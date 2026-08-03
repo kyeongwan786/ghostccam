@@ -3,10 +3,10 @@
 import { ChangeEvent, useRef, useState } from "react";
 
 const samples = [
-  { title: "거울 셀카", position: "center", tone: "red" },
-  { title: "어두운 복도", position: "25% center", tone: "blue" },
-  { title: "낡은 방", position: "75% center", tone: "brown" },
-  { title: "누군가의 시선", position: "right center", tone: "gray" },
+  { title: "거울 셀카", src: "/assets/user-bedroom-selfie.png", tone: "red" },
+  { title: "엘리베이터에서", src: "/assets/user-elevator-selfie.png", tone: "blue" },
+  { title: "카페 창가에서", src: "/assets/user-cafe-selfie.png", tone: "brown" },
+  { title: "친구들과 함께", src: "/assets/user-group-selfie.png", tone: "gray" },
 ];
 
 export default function Home() {
@@ -56,7 +56,7 @@ export default function Home() {
         <article className="benefit-card recommend-card"><div className="card-kicker">02 / TRY THIS</div><h2>이런 사진을 추천해요</h2><div className="recommend-grid"><span><b>◌</b> 거울 셀카</span><span><b>⌂</b> 어두운 실내</span><span><b>┘</b> 복도 · 계단</span><span><b>♧</b> 여러 명의 사진</span></div></article>
       </section>
 
-      <section className="moments-section"><div className="section-heading"><div><p className="eyebrow"><i /> REAL USER MOMENTS</p><h2>실제 사용자들이 <em>경험한 순간</em></h2><p>평범한 사진 속, 보이지 않던 존재가 나타납니다.</p></div><a href="#contact">더 많은 사례 보기 <b>↗</b></a></div><div className="moments-grid">{samples.map((sample, index) => <article className={`moment moment-${index + 1}`} key={sample.title}><div className={`moment-image ${sample.tone}`} style={{ backgroundImage: `url(${heroImage})`, backgroundPosition: sample.position }} /><div className="moment-overlay" /><span>{sample.title}</span><small>GHOSTNEAR / 0{index + 1}</small></article>)}</div></section>
+      <section className="moments-section"><div className="section-heading"><div><p className="eyebrow"><i /> REAL USER MOMENTS</p><h2>실제 사용자들이 <em>경험한 순간</em></h2><p>평범한 셀카 속, 보이지 않던 존재가 나타납니다.</p></div><a href="#contact">더 많은 사례 보기 <b>↗</b></a></div><div className="moments-grid">{samples.map((sample, index) => <article className={`moment moment-${index + 1}`} key={sample.title}><div className={`moment-image ${sample.tone}`} style={{ backgroundImage: `url(${sample.src})` }} /><div className="moment-overlay" /><span>{sample.title}</span><small>GHOSTNEAR / 0{index + 1}</small></article>)}</div></section>
 
       <section className="stats-section"><div className="stats-copy"><p className="eyebrow"><i /> HOW IT WORKS</p><h2>심령 사진이란?</h2><p>특수한 AI 기술을 통해 사용자의 사진 속에 보이지 않던 존재를 자연스럽게 합성하여 심령 사진을 생성합니다.<br />실제 존재를 믿지 않아도, 오늘 당신의 사진을 한번 확인해보세요.</p></div><div className="stats"><div><strong>1,250,000<small>+</small></strong><span>생성된 사진 수</span></div><div><strong>98.7<small>%</small></strong><span>만족도</span></div><div><strong>24<small>/7</small></strong><span>서비스 이용 가능</span></div></div></section>
 
