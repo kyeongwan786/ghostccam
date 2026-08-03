@@ -62,7 +62,7 @@ export default function Home() {
 
       <section className="cta-section" id="contact"><div><p className="eyebrow"><i /> ONE MORE LOOK</p><h2>지금 바로 업로드하고<br /><em>심령 사진을 확인해보세요</em></h2></div><button onClick={() => inputRef.current?.click()}>사진 업로드 <b>↗</b></button></section>
 
-      <footer className="site-footer"><div><a className="logo" href="#top">Ghost<span>Near</span></a><p>© 2024 GhostNear. All rights reserved.</p></div><div className="footer-links"><a>이용약관</a><a>개인정보처리방침</a><a>문의하기</a></div><div className="socials"><span>◎</span><span>♪</span><span>▶</span></div></footer>
+      <footer className="site-footer"><div><a className="logo" href="#top">Ghost<span>Near</span></a><p>© 2024 GhostNear. All rights reserved.</p></div><div className="footer-links"><a href="/terms">이용약관</a><a href="/privacy">개인정보처리방침</a><a href="#contact">문의하기</a></div><div className="socials"><span>◎</span><span>♪</span><span>▶</span></div></footer>
     </main>
   );
 }
