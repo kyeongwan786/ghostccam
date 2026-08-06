@@ -13,11 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ghostcam — 네 옆에 귀신이 있다",
-  description: "당신의 사진 속에 보이지 않던 존재를 보여드립니다.",
+  title: "GhostCam — 네 옆에 귀신이 있다",
+  description: "AI 기술로 당신의 사진 속 옆에 있는 존재를 보여드립니다.",
   openGraph: {
-    title: "Ghostcam — 네 옆에 귀신이 있다",
-    description: "당신의 사진 속에 보이지 않던 존재를 보여드립니다.",
+    title: "GhostCam — 네 옆에 귀신이 있다",
+    description: "AI 기술로 당신의 사진 속 옆에 있는 존재를 보여드립니다.",
     images: ["/assets/ghost-selfie-hero.png"],
   },
   icons: {

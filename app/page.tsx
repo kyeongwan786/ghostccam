@@ -23,7 +23,7 @@ export default function Home() {
     <main className="ghostcam-app">
       <div className="backdrop-glow" />
       <header className="site-header">
-        <a className="logo" href="#top">Ghost<span>cam</span></a>
+        <a className="logo" href="#top">Ghost<span>Cam</span></a>
         <nav className={menuOpen ? "open" : ""}>
           <a href="#top">홈</a><a href="#guide">이용안내</a><a href="#contact">문의하기</a>
           <button className="header-upload" onClick={() => inputRef.current?.click()}>사진 업로드 <b>↗</b></button>
@@ -35,7 +35,7 @@ export default function Home() {
         <div className="hero-copy">
           <p className="eyebrow"><i /> REALITY, WITH A LITTLE STATIC</p>
           <h1>네 옆에<br /><em>귀신이</em> 있다</h1>
-          <p className="hero-description">당신의 사진 속에<br />보이지 않던 존재를 보여드립니다.</p>
+          <p className="hero-description">AI 기술로 당신의 사진 속<br />옆에 있는 존재를 보여드립니다.</p>
           <button className="upload-card" onClick={() => inputRef.current?.click()}>
             <span className="upload-symbol">↥</span><span><strong>사진 업로드</strong><small>JPG, PNG, AVIF / 최대 10MB</small></span><b>↗</b>
             <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/avif" onChange={handlePhoto} />
@@ -52,17 +52,17 @@ export default function Home() {
       </section>
 
       <section className="benefits" id="guide">
-        <article className="benefit-card feature-card"><div className="card-kicker">01 / WHAT WE DO</div><h2>심령 사진 생성</h2><p>AI가 당신의 사진 속에 보이지 않던 존재를 자연스럽게 만들어 드립니다.</p><div className="benefit-icons"><span><b>✣</b> 자연스러운 합성</span><span><b>HD</b> 고화질 결과</span><span><b>▱</b> 개인정보 보호</span></div></article>
+        <article className="benefit-card feature-card"><div className="card-kicker">01 / WHAT WE DO</div><h2>사진 속 존재 발견</h2><p>AI 기술이 당신의 사진을 살펴보고, 보이지 않던 존재를 자연스럽게 보여드립니다.</p><div className="benefit-icons"><span><b>✣</b> 자연스러운 표현</span><span><b>HD</b> 고화질 결과</span><span><b>▱</b> 개인정보 보호</span></div></article>
         <article className="benefit-card recommend-card"><div className="card-kicker">02 / TRY THIS</div><h2>이런 사진을 추천해요</h2><div className="recommend-grid"><span><b>◌</b> 거울 셀카</span><span><b>⌂</b> 어두운 실내</span><span><b>┘</b> 복도 · 계단</span><span><b>♧</b> 여러 명의 사진</span></div></article>
       </section>
 
       <section className="moments-section"><div className="section-heading"><div><p className="eyebrow"><i /> REAL USER MOMENTS</p><h2>실제 사용자들이 <em>경험한 순간</em></h2><p>평범한 셀카 속, 보이지 않던 존재가 나타납니다.</p></div><a href="#contact">더 많은 사례 보기 <b>↗</b></a></div><div className="moments-grid">{samples.map((sample, index) => <article className={`moment moment-${index + 1}`} key={sample.title}><div className={`moment-image ${sample.tone}`} style={{ backgroundImage: `url(${sample.src})` }} /><div className="moment-overlay" /><span>{sample.title}</span><small>GHOSTCAM / 0{index + 1}</small></article>)}</div></section>
 
-      <section className="stats-section"><div className="stats-copy"><p className="eyebrow"><i /> HOW IT WORKS</p><h2>심령 사진이란?</h2><p>특수한 AI 기술을 통해 사용자의 사진 속에 보이지 않던 존재를 자연스럽게 합성하여 심령 사진을 생성합니다.<br />실제 존재를 믿지 않아도, 오늘 당신의 사진을 한번 확인해보세요.</p></div><div className="stats"><div><strong>1,250,000<small>+</small></strong><span>생성된 사진 수</span></div><div><strong>98.7<small>%</small></strong><span>만족도</span></div><div><strong>24<small>/7</small></strong><span>서비스 이용 가능</span></div></div></section>
+      <section className="stats-section"><div className="stats-copy"><p className="eyebrow"><i /> HOW IT WORKS</p><h2>사진 속 존재를<br />보여드리는 방식</h2><p>GhostCam의 AI 기술이 사용자의 사진을 분석해<br />당신 곁에 있을지도 모르는 존재를 자연스럽게 표현합니다.<br />가볍게, 하지만 소름 돋게 오늘의 사진을 확인해보세요.</p></div><div className="stats"><div><strong>1,250,000<small>+</small></strong><span>확인한 사진 수</span></div><div><strong>98.7<small>%</small></strong><span>만족도</span></div><div><strong>24<small>/7</small></strong><span>서비스 이용 가능</span></div></div></section>
 
-      <section className="cta-section" id="contact"><div><p className="eyebrow"><i /> ONE MORE LOOK</p><h2>지금 바로 업로드하고<br /><em>심령 사진을 확인해보세요</em></h2></div><button onClick={() => inputRef.current?.click()}>사진 업로드 <b>↗</b></button></section>
+      <section className="cta-section" id="contact"><div><p className="eyebrow"><i /> ONE MORE LOOK</p><h2>지금 바로 업로드하고<br /><em>사진 속 존재를 확인해보세요</em></h2></div><button onClick={() => inputRef.current?.click()}>사진 업로드 <b>↗</b></button></section>
 
-      <footer className="site-footer"><div><a className="logo" href="#top">Ghost<span>cam</span></a><p>© 2026 Ghostcam. All rights reserved.</p></div><div className="footer-links"><a href="/terms">이용약관</a><a href="/privacy">개인정보처리방침</a><a href="#contact">문의하기</a></div><div className="socials"><span>◎</span><span>♪</span><span>▶</span></div></footer>
+      <footer className="site-footer"><div><a className="logo" href="#top">Ghost<span>Cam</span></a><p>© 2026 GhostCam. All rights reserved.</p></div><div className="footer-links"><a href="/terms">이용약관</a><a href="/privacy">개인정보처리방침</a><a href="#contact">문의하기</a></div><div className="socials"><span>◎</span><span>♪</span><span>▶</span></div></footer>
     </main>
   );
 }
