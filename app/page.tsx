@@ -23,7 +23,7 @@ export default function Home() {
     <main className="ghostcam-app">
       <div className="backdrop-glow" />
       <header className="site-header">
-        <a className="logo" href="#top">Ghost<span>Near</span></a>
+        <a className="logo" href="#top">Ghost<span>cam</span></a>
         <nav className={menuOpen ? "open" : ""}>
           <a href="#top">홈</a><a href="#guide">이용안내</a><a href="#contact">문의하기</a>
           <button className="header-upload" onClick={() => inputRef.current?.click()}>사진 업로드 <b>↗</b></button>
