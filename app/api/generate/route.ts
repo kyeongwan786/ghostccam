@@ -17,8 +17,18 @@ const GHOST_VARIATIONS = [
   "COMPOSITION VARIANT: Place the presence within a crowd, poster, photograph, or background pattern, but make its eyes or silhouette clearly recognizable without zooming in. Preserve the original scene and do not add extra people everywhere.",
 ];
 
-const DEFAULT_PROMPT =
-  "Perform a minimal photographic edit. Preserve the uploaded image as the exact base image: keep the original person, face, body, clothing, pose, framing, camera perspective, background layout, architecture, doors, walls, windows, mirrors, glass, furniture, signs, shelves, floor, lighting, colors, textures, shadows, reflections, and object opacity unchanged. Do not redesign, reconstruct, remove, replace, open, blur, brighten, darken, or make any existing object transparent. Do not turn a solid door, wall, cabinet, or other surface into glass or a see-through surface. Do not change the person's appearance or invent a new background. Add exactly one clearly visible ghostly presence as the only meaningful visual change, using the selected composition variant as the primary instruction. The ghost must be immediately detectable at normal viewing size: use a distinct silhouette, readable head and body shape, clear tonal separation from its surroundings, and enough contrast to inspect its form. Do not make the ghost faint, washed out, transparent, low-contrast, hidden in fog, blurred into the background, or dependent on zooming in. The presence must be genuinely different in placement, scale, distance, posture, and visibility from a generic person standing behind the subject, while following the scene's existing perspective, occlusion, depth of field, shadows, and light direction. If the selected placement would require changing an existing object, choose a nearby physically plausible location instead. Make it eerie and uncanny but non-graphic: no blood, wounds, exposed anatomy, sexualized appearance, or gore. Add a static thin red four-corner detection bracket around the ghostly presence as part of the edited photograph, matching its actual position and perspective. The bracket is the only graphic overlay allowed: no scanning laser, animation, glow, full rectangle, words, letters, labels, logos, UI, or watermarks.";
+const DEFAULT_PROMPT = `
+Edit the uploaded photograph, do not recreate it from scratch. Treat the original image as a locked photographic plate: preserve the real person's face, skin texture, hair, body, clothing, pose, framing, camera perspective, background, architecture, furniture, reflections, colors, exposure, white balance, shadows, lens characteristics, and natural image noise exactly as they are. Do not beautify, retouch, sharpen, repaint, redraw, replace, or reinterpret any existing part of the photo.
+
+Add exactly one realistic anomalous human presence as the only meaningful visual change, following the selected composition variant. It must look like a real person accidentally captured by the same camera in the same room: anatomically plausible but unsettling, with realistic hair, skin, fabric, depth, occlusion, contact shadows, ambient light, focus falloff, motion blur, compression artifacts, and sensor grain that match the source photo. Make it subtly pale, desaturated, underexposed, or partially occluded only if that helps it sit naturally in the scene. It must be visible at normal viewing size, but it should feel like a believable photographic anomaly rather than a fantasy illustration.
+
+Avoid all painterly, cartoon, 3D-rendered, plastic, airbrushed, poster-like, cutout, sticker-like, smoky, glowing, neon, perfectly smooth, symmetrical, or high-contrast horror effects. Do not use transparent white clothing, empty black eye sockets, exaggerated facial features, fantasy costumes, clean CGI edges, or artificial rim light. Do not alter the original subject or invent a new background. Do not turn any solid surface into glass or change the scene layout. If the selected placement would require changing an existing object, choose a nearby physically plausible location instead.
+
+Add one very thin red four-corner detection bracket around the anomalous presence, aligned to its actual position and perspective. Keep the bracket minimal and photographic, with no full rectangle, scanning beam, glow, words, letters, labels, logos, UI, or watermark. No blood, wounds, exposed anatomy, sexualized appearance, or gore.
+`.trim();
+
+const PHOTOREALISM_RULES =
+  "Photorealism priority: the original image must remain visually dominant and unchanged; the anomaly must inherit the source camera's lighting, white balance, focus, grain, compression, perspective, and occlusion. It should look composited into a real photograph, never illustrated or generated as a standalone character.";
 
 export async function POST(request: Request) {
   const apiKey = process.env.OPENAI_API_KEY;
@@ -32,7 +42,7 @@ export async function POST(request: Request) {
   const form = await request.formData();
   const image = form.get("image");
   const customPrompt = String(form.get("prompt") || "").trim();
-  const prompt = `${customPrompt || DEFAULT_PROMPT}\n\n${GHOST_VARIATIONS[Math.floor(Math.random() * GHOST_VARIATIONS.length)]}`;
+  const prompt = `${customPrompt || DEFAULT_PROMPT}\n\n${GHOST_VARIATIONS[Math.floor(Math.random() * GHOST_VARIATIONS.length)]}\n\n${PHOTOREALISM_RULES}`;
 
   if (!(image instanceof File) || !image.type.startsWith("image/")) {
     return NextResponse.json({ error: "이미지 파일을 업로드해주세요." }, { status: 400 });
@@ -49,7 +59,7 @@ export async function POST(request: Request) {
   body.append("image", image, image.name || "ghostcam-input.png");
   body.append("prompt", prompt || DEFAULT_PROMPT);
   body.append("size", "auto");
-  body.append("quality", "medium");
+  body.append("quality", "high");
 
   try {
     const response = await fetch("https://api.openai.com/v1/images/edits", {
