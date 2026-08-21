@@ -17,6 +17,70 @@ const GHOST_VARIATIONS = [
   "COMPOSITION VARIANT: Place the presence within a crowd, poster, photograph, or background pattern, but make its eyes or silhouette clearly recognizable without zooming in. Preserve the original scene and do not add extra people everywhere.",
 ];
 
+const PLACEMENT_VARIATIONS: Record<string, string> = {
+  close_subject:
+    "COMPOSITION VARIANT: Place the connected ghost physically close beside the subject's face or just behind one shoulder, using only real empty space visible in the photo. Keep the real person's face untouched. Show the ghost's head, neck, shoulders, and upper torso with correct scale, depth, focus, and occlusion.",
+  behind_furniture:
+    "COMPOSITION VARIANT: Place the connected ghost naturally behind or beside an existing chair, sofa, table, bed, or other visible furniture. Let the furniture visibly occlude part of the body and anchor the ghost in the room with contact shadows and matching perspective. Do not invent or alter furniture.",
+  doorway_or_opening:
+    "COMPOSITION VARIANT: Place the connected ghost inside an already visible open doorway, hallway, or opening. Use the existing opening only; do not create a new door, wall, hallway, or room. The ghost must stand on the visible floor or be naturally occluded by the real frame.",
+  reflection:
+    "COMPOSITION VARIANT: Place the connected ghost only inside a clearly visible existing mirror, window, or reflective surface. Do not invent a reflection surface. Preserve the solid original scene and obey the real surface's perspective and lighting.",
+  edge_of_frame:
+    "COMPOSITION VARIANT: Place the connected ghost at a real edge of the existing frame, partially occluded by a visible wall, furniture, or object. It must occupy physical space behind that object, not appear painted on it or float in empty space.",
+  background_depth:
+    "COMPOSITION VARIANT: Place the connected ghost in the deepest believable open space already visible in the background, beside or behind existing objects. Do not create doors, windows, hallways, furniture, walls, or new rooms. Use the existing floor, occlusion, perspective, and shadows to ground the figure.",
+};
+
+const PLACEMENT_SELECTOR_PROMPT = `
+Inspect the uploaded photograph as a scene-layout analyst. Choose exactly one placement_id for ONE ghost that would look most physically natural in this specific photo. Use only structures and empty spaces that are visibly present. Never invent a door, hallway, mirror, window, floor, furniture, or opening.
+
+Options:
+- close_subject: only when there is usable real space beside the person's face or shoulder.
+- behind_furniture: when existing furniture can naturally hide and anchor part of the ghost.
+- doorway_or_opening: only when an actual open doorway, hallway, or opening is clearly visible.
+- reflection: only when an actual mirror, window, or reflective surface is clearly visible.
+- edge_of_frame: when a real frame edge or object can naturally occlude the ghost.
+- background_depth: safest fallback for visible open space that does not fit the others.
+
+For a selfie or portrait, prefer close_subject if the side space is usable; otherwise prefer behind_furniture or edge_of_frame. Do not choose doorway_or_opening or reflection unless they are unmistakably visible. Return JSON only: {"placement_id":"one option above","reason":"short reason based only on visible features"}.
+`.trim();
+
+async function choosePlacement(image: File, apiKey: string): Promise<string> {
+  const imageBase64 = Buffer.from(await image.arrayBuffer()).toString("base64");
+  const imageUrl = `data:${image.type};base64,${imageBase64}`;
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "gpt-4.1-mini",
+        response_format: { type: "json_object" },
+        max_tokens: 160,
+        messages: [
+          {
+            role: "user",
+            content: [
+              { type: "text", text: PLACEMENT_SELECTOR_PROMPT },
+              { type: "image_url", image_url: { url: imageUrl, detail: "high" } },
+            ],
+          },
+        ],
+      }),
+    });
+    if (!response.ok) return "background_depth";
+    const payload = (await response.json()) as {
+      choices?: Array<{ message?: { content?: string | null } }>;
+    };
+    const content = payload.choices?.[0]?.message?.content || "";
+    const placementId = JSON.parse(content).placement_id;
+    return typeof placementId === "string" && placementId in PLACEMENT_VARIATIONS ? placementId : "background_depth";
+  } catch {
+    return "background_depth";
+  }
+}
+
 const DEFAULT_PROMPT = `
 Edit the uploaded photograph, do not recreate it from scratch. Treat the original image as a locked photographic plate: preserve the real person's face, skin texture, hair, body, clothing, pose, framing, camera perspective, background, architecture, furniture, reflections, colors, exposure, white balance, shadows, lens characteristics, and natural image noise exactly as they are. Do not beautify, retouch, sharpen, repaint, redraw, replace, or reinterpret any existing part of the photo.
 
@@ -46,7 +110,6 @@ export async function POST(request: Request) {
   const form = await request.formData();
   const image = form.get("image");
   const customPrompt = String(form.get("prompt") || "").trim();
-  const prompt = `${customPrompt || DEFAULT_PROMPT}\n\n${GHOST_VARIATIONS[Math.floor(Math.random() * GHOST_VARIATIONS.length)]}\n\n${PHOTOREALISM_RULES}`;
 
   if (!(image instanceof File) || !image.type.startsWith("image/")) {
     return NextResponse.json({ error: "이미지 파일을 업로드해주세요." }, { status: 400 });
@@ -57,6 +120,9 @@ export async function POST(request: Request) {
   if (customPrompt.length > 1000) {
     return NextResponse.json({ error: "프롬프트는 1,000자 이하로 입력해주세요." }, { status: 400 });
   }
+
+  const placementId = await choosePlacement(image, apiKey);
+  const prompt = `${customPrompt || DEFAULT_PROMPT}\n\n${PLACEMENT_VARIATIONS[placementId]}\n\n${PHOTOREALISM_RULES}`;
 
   const body = new FormData();
   body.append("model", "gpt-image-2");
