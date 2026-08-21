@@ -19,7 +19,7 @@ const GHOST_VARIATIONS = [
 
 const PLACEMENT_VARIATIONS: Record<string, string> = {
   close_subject:
-    "COMPOSITION VARIANT: Place the connected ghost physically close beside the subject's face or just behind one shoulder, using only real empty space visible in the photo. Keep the real person's face untouched. Show the ghost's head, neck, shoulders, and upper torso with correct scale, depth, focus, and occlusion.",
+    "COMPOSITION VARIANT: The real person is the primary anchor. Place the connected ghost immediately beside the person's face, cheek, shoulder, upper torso, or body silhouette—within arm's reach and on the same depth plane, as if it were physically standing or leaning right next to them when the photo was taken. For a selfie or close portrait, keep the ghost only a few centimeters beside or just behind the face/shoulder, using the narrow real space visible next to the person; for a wider shot, attach it to the side or rear edge of the person's visible body. Keep the real person's face and body untouched. Show the ghost's head, neck, shoulders, and connected upper torso with correct scale, depth, focus, contact shadow, and natural occlusion. Never place it far in the background, on a wall, or detached from the person.",
   behind_furniture:
     "COMPOSITION VARIANT: Place the connected ghost naturally behind or beside an existing chair, sofa, table, bed, or other visible furniture. Let the furniture visibly occlude part of the body and anchor the ghost in the room with contact shadows and matching perspective. Do not invent or alter furniture.",
   doorway_or_opening:
@@ -43,7 +43,7 @@ Options:
 - edge_of_frame: when a real frame edge or object can naturally occlude the ghost.
 - background_depth: safest fallback for visible open space that does not fit the others.
 
-For a selfie or portrait, prefer close_subject if the side space is usable; otherwise prefer behind_furniture or edge_of_frame. Do not choose doorway_or_opening or reflection unless they are unmistakably visible. Return JSON only: {"placement_id":"one option above","reason":"short reason based only on visible features"}.
+HARD RULE: If any real person, face, head, shoulder, torso, or body is visible, you MUST return close_subject. The ghost must be attached to that person's immediate personal space; do not choose a distant background, doorway, reflection, or furniture placement for a person photo. Only when no person or body is visible may you choose another option, and then only if that structure is unmistakably present. Never invent a door, hallway, mirror, window, floor, furniture, or opening. Return JSON only: {"placement_id":"one option above","reason":"short reason based only on visible features"}.
 `.trim();
 
 async function choosePlacement(image: File, apiKey: string): Promise<string> {
@@ -85,6 +85,8 @@ const DEFAULT_PROMPT = `
 Edit the uploaded photograph, do not recreate it from scratch. Treat the original image as a locked photographic plate: preserve the real person's face, skin texture, hair, body, clothing, pose, framing, camera perspective, background, architecture, furniture, reflections, colors, exposure, white balance, shadows, lens characteristics, and natural image noise exactly as they are. Do not beautify, retouch, sharpen, repaint, redraw, replace, or reinterpret any existing part of the photo.
 
 Add exactly one realistic but unmistakably supernatural ghost as the only meaningful visual change, following the selected composition variant. The ghost must exist as a solid three-dimensional figure physically inside the room, like a person actually standing, sitting, crouching, or leaning there when the photograph was taken. Anchor it to the scene with believable contact: feet on the floor, hips on a chair, a body behind existing furniture, or a shoulder against a doorway; include natural occlusion, cast shadow, ambient bounce light, correct perspective scale, and matching focus, motion blur, compression artifacts, and sensor grain. The ghost should feel supernatural through its pale expression, unnatural stillness, old-fashioned or slightly wrong clothing, and unsettling posture—not through transparency or special effects. It must be visible at normal viewing size and clearly feel like a ghost, not an ordinary healthy person.
+
+When a real person is visible, keep the ghost physically close to that person above all else: immediately beside or just behind the face, shoulder, upper torso, or body silhouette, within arm's reach and on the same depth plane. In a selfie, the ghost should feel uncomfortably close to the user's face or shoulder, not like a distant figure elsewhere in the room. Preserve a natural connected head, neck, shoulders, and torso while keeping the user's face and body unchanged.
 
 Anatomy and composition requirement: never show a floating head, detached neck, face-only peek, or a head sticking out by itself. The head must connect naturally to visible shoulders and an upper torso, or to a complete body when the placement allows it. If furniture or a wall occludes the ghost, show believable connected body parts continuing behind the occluder with natural depth and shadow. Do not crop the ghost at the neck; do not make it look like a severed mannequin or a random portrait pasted into the background.
 
