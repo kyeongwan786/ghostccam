@@ -59,7 +59,7 @@ export async function POST(request: Request) {
   body.append("image", image, image.name || "ghostcam-input.png");
   body.append("prompt", prompt || DEFAULT_PROMPT);
   body.append("size", "auto");
-  body.append("quality", "high");
+  body.append("quality", "medium");
 
   try {
     const response = await fetch("https://api.openai.com/v1/images/edits", {
