@@ -123,7 +123,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "프롬프트는 1,000자 이하로 입력해주세요." }, { status: 400 });
   }
 
-  const placementId = await choosePlacement(image, apiKey);
+  // The product's core behavior is a close encounter with the uploaded person.
+  // Skip the extra scene-analysis request so placement is deterministic and faster.
+  const placementId = "close_subject";
   const prompt = `${customPrompt || DEFAULT_PROMPT}\n\n${PLACEMENT_VARIATIONS[placementId]}\n\n${PHOTOREALISM_RULES}`;
 
   const body = new FormData();
