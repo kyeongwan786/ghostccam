@@ -1,4 +1,18 @@
-# vinext-starter
+# GhostCam workspace
+
+The repository is split into two product surfaces:
+
+- `web/`: the existing GhostCam web app (`web/app/` and `web/public/`)
+- `app/`: the future native app
+- `shared/`: platform-neutral contracts shared by web, app, and API
+- `worker/`: Cloudflare Worker entry point
+
+The root keeps the shared build, hosting, worker, and dependency configuration so
+the web app can continue to run with `npm run dev` and `npm run build`.
+
+Keep browser-only code under `web/`, native/device code under `app/`, and
+server-only code under `worker/`. Do not import UI code across those surfaces;
+share only small, platform-neutral modules from `shared/`.
 
 A clean full-stack starter running on
 [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
@@ -20,7 +34,7 @@ This starter does not use `wrangler.jsonc`.
 
 ## Included Shape
 
-- edit site code under `app/`
+- edit web site code under `web/app/`
 - `.openai/hosting.json` declares optional Sites D1 and R2 bindings
 - `vite.config.ts` simulates declared bindings for local development
 - `db/schema.ts` starts intentionally empty
@@ -60,7 +74,7 @@ export default async function Home() {
 
 ## Optional Dispatch-Owned ChatGPT Sign-In
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
+Import the ready-to-use helpers from `web/app/chatgpt-auth.ts` when the site needs
 optional or required ChatGPT sign-in:
 
 - Use `getChatGPTUser()` for optional signed-in UI.

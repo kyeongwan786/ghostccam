@@ -1,11 +1,12 @@
 "use client";
 
 import { CSSProperties, useEffect, useState } from "react";
+import { loadResult } from "../../lib/result-storage";
 
 export default function ResultPage() {
   const [image, setImage] = useState("");
   useEffect(() => {
-    setImage(sessionStorage.getItem("ghostcam-result") || "");
+    setImage(loadResult());
   }, []);
 
   const download = () => {
