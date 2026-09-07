@@ -40,3 +40,8 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# local build/export artifacts
+*.tar.gz
+tmp-*.png
+app/*-check*.png

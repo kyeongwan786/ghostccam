@@ -44,12 +44,14 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
-    root: "web",
+    publicDir: "web/public",
     server: isCodexSeatbeltSandbox
       ? { watch: { useFsEvents: false, usePolling: true } }
       : undefined,
     plugins: [
-      vinext(),
+      // `appDir` is the directory containing the Next-style `app/` folder.
+      // Point it at web so the native `app/` folder is never route-scanned.
+      vinext({ appDir: "web" }),
       sites(),
       cloudflare({
         viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },

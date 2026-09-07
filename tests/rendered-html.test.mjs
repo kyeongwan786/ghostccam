@@ -37,12 +37,16 @@ test("server-renders the GhostCam web surface", async () => {
 });
 
 test("keeps platform boundaries explicit", async () => {
-  const [page, upload, storage, shared, appReadme] = await Promise.all([
+  const [page, upload, storage, shared, appReadme, appEntry, appHome, appPubspec, appTest] = await Promise.all([
     readFile(new URL("web/app/page.tsx", root), "utf8"),
     readFile(new URL("web/lib/upload.ts", root), "utf8"),
     readFile(new URL("web/lib/result-storage.ts", root), "utf8"),
     readFile(new URL("shared/ghostcam.ts", root), "utf8"),
     readFile(new URL("app/README.md", root), "utf8"),
+    readFile(new URL("app/lib/main.dart", root), "utf8"),
+    readFile(new URL("app/lib/pages/home_page.dart", root), "utf8"),
+    readFile(new URL("app/pubspec.yaml", root), "utf8"),
+    readFile(new URL("app/test/widget_test.dart", root), "utf8"),
   ]);
 
   assert.match(page, /from "\.\.\/lib\/upload"/);
@@ -51,8 +55,13 @@ test("keeps platform boundaries explicit", async () => {
   assert.match(upload, /export async function optimizeForUpload/);
   assert.match(storage, /export function saveResult/);
   assert.match(shared, /export interface GenerateImageResponse/);
-  assert.match(appReadme, /native app surface/);
+  assert.match(appReadme, /Flutter 모바일 앱/);
+  assert.match(appEntry, /class GhostCamApp/);
+  assert.match(appHome, /LIVE SCAN/);
+  assert.match(appPubspec, /assets\/ghost-selfie-hero\.png/);
+  assert.match(appTest, /GhostCam home screen renders/);
 
   await access(new URL("web/public/assets/ghostcam-hero-reference.png", root));
+  await access(new URL("app/assets/ghost-selfie-hero.png", root));
   await access(new URL("worker/index.ts", root));
 });
